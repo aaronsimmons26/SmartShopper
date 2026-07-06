@@ -40,3 +40,21 @@ def get_price_by_id(id):
         'price': query['price'],
         'last_updated': query['last_updated']
     }
+
+def create_price(store_name, product_name, price):
+    now = dt.datetime.now().isoformat()
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO prices (store_name, product_name, price, last_updated)
+    VALUES (?, ?, ?, ?)
+    """, (store_name, product_name, price, now))
+
+    new_id = cursor.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return get_price_by_id(new_id)
