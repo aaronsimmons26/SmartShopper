@@ -19,3 +19,24 @@ def get_all_prices():
         }
         for row in rows
     ]
+
+def get_price_by_id(id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM prices WHERE id = ?", (id,))
+
+    query = cursor.fetchone()
+
+    conn.close()
+
+    if query is None:
+        return None
+
+    return {
+        'id': query['id'],
+        'store_name': query['store_name'],
+        'product_name': query['product_name'],
+        'price': query['price'],
+        'last_updated': query['last_updated']
+    }
