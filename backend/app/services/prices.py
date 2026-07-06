@@ -3,7 +3,7 @@ def get_all_prices():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM price_entries")
+    cursor.execute("SELECT * FROM prices")
 
     rows = cursor.fetchall()
 
