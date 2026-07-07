@@ -80,3 +80,20 @@ def update_price(id, store_name, product_name, price):
         return None
 
     return get_price_by_id(id)
+
+def delete_price(id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    DELETE FROM prices
+    WHERE id = ?
+    """, (id,))
+
+    updated = cursor.rowcount > 0
+
+    conn.commit()
+    conn.close()
+
+    return updated
