@@ -58,3 +58,25 @@ def create_price(store_name, product_name, price):
     conn.close()
 
     return get_price_by_id(new_id)
+
+def update_price(id, store_name, product_name, price):
+    now = dt.datetime.now().isoformat()
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    UPDATE prices
+    SET store_name = ?, product_name = ?, price = ?, last_updated = ?
+    WHERE id = ?
+    """, (store_name, product_name, price, now, id))
+
+    updated = cursor.rowcount > 0
+
+    conn.commit()
+    conn.close()
+
+    if not updated:
+        return None
+
+    return get_price_by_id(id)
