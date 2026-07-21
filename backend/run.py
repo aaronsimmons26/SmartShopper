@@ -6,6 +6,24 @@ app = Flask(__name__)
 def homepage():
     return jsonify({'message': 'Home'})
 
+@app.route('/prices')
+def get_prices():
+    prices = get_all_prices()
+    return jsonify(prices)
+
+@app.route('/prices', methods=['POST'])
+def add_price():
+    data = request.get_json()
+
+    new_price = create_price(
+        data['store_name'],
+        data['product_name'],
+        data['price']
+    )
+
+    return jsonify(new_price), 201
+
+
 @app.route('/shopping-plan', methods=['POST'])
 def post_shopping_plan():
     data = request.get_json()
