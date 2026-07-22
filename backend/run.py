@@ -1,5 +1,16 @@
 from flask import Flask, jsonify, request
 
+from app.database.db import initialize_database
+from app.services.prices import (
+    get_all_prices,
+    get_price_by_id,
+    create_price,
+    update_price,
+    delete_price
+)
+
+initialize_database()
+
 app = Flask(__name__)
 
 @app.route('/')
