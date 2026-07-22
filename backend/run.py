@@ -17,7 +17,7 @@ app = Flask(__name__)
 def homepage():
     return jsonify({'message': 'Home'})
 
-@app.route('/prices')
+@app.route('/prices', methods=['GET'])
 def get_prices():
     prices = get_all_prices()
     return jsonify(prices)
