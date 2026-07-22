@@ -34,6 +34,14 @@ def add_price():
 
     return jsonify(new_price), 201
 
+@app.route('/prices/<int:id>', methods=['GET'])
+def get_price(id):
+    price = get_price_by_id(id)
+
+    if price is None:
+        return jsonify({'message': 'Price not found'}), 404
+
+    return jsonify(price)
 
 @app.route('/shopping-plan', methods=['POST'])
 def post_shopping_plan():
