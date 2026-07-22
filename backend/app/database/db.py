@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE = 'database/smartshopper.db'
+DATABASE = 'app/database/smartshopper.db'
 
 def get_connection():
     conn = sqlite3.connect(DATABASE)
