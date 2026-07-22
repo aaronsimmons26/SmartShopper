@@ -43,6 +43,23 @@ def get_price(id):
 
     return jsonify(price)
 
+@app.route('/prices/<int:id>', methods=['PUT'])
+def modify_price(id):
+    data = request.get_json()
+
+    price = update_price(
+        id,
+        data['store_name'],
+        data['product_name'],
+        data['price']
+    )
+
+    if price is None:
+        return jsonify({'message': 'Price not found'}), 404
+
+    return jsonify(price)
+
+
 @app.route('/shopping-plan', methods=['POST'])
 def post_shopping_plan():
     data = request.get_json()
