@@ -59,6 +59,14 @@ def modify_price(id):
 
     return jsonify(price)
 
+@app.route('/prices/<int:id>', methods=['DELETE'])
+def remove_price(id):
+    price = delete_price(id)
+
+    if price is None:
+        return jsonify({'message': 'Price not found'}), 404
+
+    return jsonify({'message': 'Price deleted successfully'})
 
 @app.route('/shopping-plan', methods=['POST'])
 def post_shopping_plan():
