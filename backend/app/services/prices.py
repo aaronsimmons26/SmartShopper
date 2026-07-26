@@ -41,6 +41,34 @@ def get_price_by_id(id):
         'last_updated': query['last_updated']
     }
 
+def get_or_create_store(store_name):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id from stores WHERE name = ?", (store_name,))
+
+    query = cursor.fetchone()
+
+    if query is None:
+        cursor.execute("""
+        INSERT INTO stores (name)
+        VALUES (?)
+        """, (store_name,))
+
+        conn.commit()
+        new_id = cursor.lastrowid
+        conn.close()
+
+        return new_id
+
+    store_id = query['id']
+    conn.close()
+
+    return store_id
+
+
+
+
 def create_price(store_name, product_name, price):
     now = dt.datetime.now().isoformat()
 
