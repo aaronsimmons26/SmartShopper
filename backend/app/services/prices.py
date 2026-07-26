@@ -93,15 +93,17 @@ def get_or_create_product(product_name):
 
 
 def create_price(store_name, product_name, price):
+    store_id = get_or_create_store(store_name)
+    product_id = get_or_create_product(product_name)
     now = dt.datetime.now().isoformat()
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO prices (store_name, product_name, price, last_updated)
+    INSERT INTO prices (store_id, product_id, price, last_updated)
     VALUES (?, ?, ?, ?)
-    """, (store_name, product_name, price, now))
+    """, (store_id, product_id, price, now))
 
     new_id = cursor.lastrowid
 
