@@ -35,8 +35,8 @@ def get_price_by_id(id):
 
     return {
         'id': query['id'],
-        'store_name': query['store_name'],
-        'product_name': query['product_name'],
+        'store_id': query['store_id'],
+        'product_id': query['product_id'],
         'price': query['price'],
         'last_updated': query['last_updated']
     }
