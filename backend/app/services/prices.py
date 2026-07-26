@@ -66,7 +66,30 @@ def get_or_create_store(store_name):
 
     return store_id
 
+def get_or_create_product(product_name):
+    conn = get_connection()
+    cursor = conn.cursor()
+    new_id = 0
+    cursor.execute("SELECT id from products WHERE name = ?", (product_name,))
 
+    query = cursor.fetchone()
+
+    if query is None:
+        cursor.execute("""
+        INSERT INTO products (name)
+        VALUES (?)
+        """, (product_name,))
+
+        new_id = cursor.lastrowid
+
+        conn.commit()
+        conn.close()
+    else:
+        new_id = query['id']
+
+    conn.close()
+
+    return new_id
 
 
 def create_price(store_name, product_name, price):
