@@ -1,9 +1,27 @@
+from app.database.db import get_connection
+import datetime as dt
 
 def get_all_prices():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM prices")
+    cursor.execute("""
+        SELECT
+            prices.id,
+            stores.name AS store_name,
+            products.name AS product_name,
+            prices.price,
+            prices.last_updated
+        FROM prices
+        
+        JOIN stores
+        ON prices.store_id = stores.id
+        
+        JOIN products
+        On prices.product_id = products.id
+
+        ORDER BY prices.id
+    """)
 
     rows = cursor.fetchall()
 
@@ -24,7 +42,23 @@ def get_price_by_id(id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM prices WHERE id = ?", (id,))
+    cursor.execute("""
+        SELECT
+            prices.id,
+            stores.name AS store_name,
+            products.name AS product_name,
+            prices.price,
+            prices.last_updated
+        FROM prices
+
+        JOIN stores
+        ON prices.store_id = stores.id
+
+        JOIN products
+        ON prices.product_id = products.id
+
+        WHERE prices.id = ?
+    """, (id,))
 
     query = cursor.fetchone()
 
@@ -35,8 +69,8 @@ def get_price_by_id(id):
 
     return {
         'id': query['id'],
-        'store_id': query['store_id'],
-        'product_id': query['product_id'],
+        'store_name': query['store_name'],
+        'product_name': query['product_name'],
         'price': query['price'],
         'last_updated': query['last_updated']
     }
@@ -113,6 +147,10 @@ def create_price(store_name, product_name, price):
     return get_price_by_id(new_id)
 
 def update_price(id, store_name, product_name, price):
+    # Check first so a missing id doesn't create stores or products as a side effect
+    if get_price_by_id(id) is None:
+        return None
+
     now = dt.datetime.now().isoformat()
 
     conn = get_connection()
@@ -120,9 +158,9 @@ def update_price(id, store_name, product_name, price):
 
     cursor.execute("""
     UPDATE prices
-    SET store_name = ?, product_name = ?, price = ?, last_updated = ?
+    SET store_id = ?, product_id = ?, price = ?, last_updated = ?
     WHERE id = ?
-    """, (store_name, product_name, price, now, id))
+    """, (get_or_create_store(store_name), get_or_create_product(product_name), price, now, id))
 
     updated = cursor.rowcount > 0
 

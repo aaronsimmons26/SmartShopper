@@ -1,0 +1,11 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local databases (real data and backups stay on this machine)
+*.db
+backend/instance/
+
+# macOS
+.DS_Store
